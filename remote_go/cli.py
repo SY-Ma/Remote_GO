@@ -63,6 +63,7 @@ def build_parser() -> argparse.ArgumentParser:
     runs_parser.add_argument("--local-only", action="store_true")
     runs_parser.add_argument("--verbose", action="store_true")
     runs_parser.add_argument("--history", action="store_true")
+    runs_parser.add_argument("--json", action="store_true")
     runs_parser.set_defaults(func="runs")
 
     log_parser = subparsers.add_parser("log", help="Show the remote log tail for one run.")

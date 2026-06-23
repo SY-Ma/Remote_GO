@@ -2263,6 +2263,13 @@ def command_runs(args: argparse.Namespace, adapters: Sequence[ProjectAdapter]) -
             records = limit_current_records(world.current_records(), args.limit)
         else:
             records = enrich_records_with_remote_status(records, adapters, hosts)
+    if getattr(args, "json", False):
+        print(json.dumps({
+            "count": len(records),
+            "limit": args.limit,
+            "records": records,
+        }, indent=2, ensure_ascii=False))
+        return 0
     print_registry(records, verbose=args.verbose)
     return 0
 

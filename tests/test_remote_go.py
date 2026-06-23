@@ -213,6 +213,30 @@ class RemoteGoTests(unittest.TestCase):
         self.assertIn("run-8", proc.stdout)
         self.assertIn("run-19", proc.stdout)
 
+    def test_runs_json_returns_structured_records(self) -> None:
+        root = self.make_project()
+        adapter = self.load_adapter(root)
+        console.append_registry(adapter.local_registry, {
+            "project_id": "demo",
+            "run_id": "run-json",
+            "created_at": "2026-01-01T00:00:00+00:00",
+            "task": "command",
+            "mode": "command",
+            "host": "gpu1",
+            "gpu": 0,
+            "release_dir": "/remote/demo/releases/run-json",
+            "log_file": "/remote/demo/logs/remote_go/run-json.log",
+            "command": ["python", "train.py"],
+            "remote_status": {"state": "COMPLETED"},
+        })
+
+        proc = self.run_go(root, ["runs", "--local-only", "--json"])
+        payload = json.loads(proc.stdout)
+
+        self.assertEqual(payload["count"], 1)
+        self.assertEqual(payload["records"][0]["run_id"], "run-json")
+        self.assertEqual(payload["records"][0]["host"], "gpu1")
+
     def test_run_world_current_view_keeps_all_running_rows_over_limit(self) -> None:
         records = [
             {"run_id": f"done-{index}", "remote_status": {"state": "COMPLETED"}}

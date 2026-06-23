@@ -4,6 +4,8 @@ English | [中文](README.zh-CN.md)
 
 Remote_GO is a project-local command tool for SSH/tmux based remote experiment workflows. It helps you keep a lightweight view of remote GPU status, launch your own experiments, track recent runs, and pull back selected logs or outputs.
 
+It also gives AI assistants and scripts a clean management layer. Instead of asking an AI to infer server state from scattered shell commands, Remote_GO keeps stable run ids, project-local records, structured status, and predictable commands that are easier to read, verify, and call safely.
+
 It is intentionally small. Remote_GO is not a scheduler, cloud platform, queue system, or full experiment tracker.
 
 ## When To Use It
@@ -15,6 +17,7 @@ It is intentionally small. Remote_GO is not a scheduler, cloud platform, queue s
 | You often run multiple experiments for the same project | Show recent runs, their status, host, GPU, command, and log location |
 | You need to check a running or finished experiment | Tail the remote log from your local terminal |
 | You want selected logs or results back on your laptop | Pull only the configured logs or output files back into the local project |
+| You want an AI assistant to help manage remote experiments | Give the AI stable run ids, readable state, and JSON command output instead of scattered server commands |
 
 ## Requirements
 
@@ -141,6 +144,7 @@ Run list examples:
 ./go runs
 ./go runs --limit 30
 ./go runs --all
+./go runs --json
 ```
 
 Pull examples:
@@ -151,6 +155,17 @@ Pull examples:
 ```
 
 Edit `.remote_go/pull.yaml` to choose which logs, outputs, or model files are copied.
+
+## AI-Friendly Use
+
+Remote_GO is designed to stay easy for people first, while still being predictable for an AI layer above it. The important surfaces are:
+
+- `./go status --json`: read current host/GPU/process state.
+- `./go runs --json`: read recent runs with stable `run_id`, host, GPU, command, log path, and status.
+- `./go refresh --json`: rebuild the current run view from live server facts.
+- `./go run --dry-run -- ...` and `./go kill <run_id> --dry-run`: preview remote actions before executing them.
+
+This makes it easier for an AI assistant to manage experiments accurately because it can refer to one project-local interface instead of guessing from shell history, tmux panes, process names, or ad hoc log files.
 
 ## Build And Validate
 
