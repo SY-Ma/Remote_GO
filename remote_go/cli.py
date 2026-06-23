@@ -92,7 +92,7 @@ def build_parser() -> argparse.ArgumentParser:
     pull_parser = subparsers.add_parser("pull", help="Pull configured remote files back to the local project.")
     add_project_config(pull_parser)
     pull_parser.add_argument("--host", type=str, default=None)
-    pull_parser.add_argument("--kind", type=str, default="all")
+    pull_parser.add_argument("--kind", type=str, default="all", help=argparse.SUPPRESS)
     pull_parser.add_argument("--dry-run", action="store_true")
     pull_parser.set_defaults(func="pull")
 
