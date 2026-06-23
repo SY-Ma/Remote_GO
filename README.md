@@ -10,6 +10,8 @@ Remote_GO focuses on the common local-to-remote experiment workflow.
 
 ![Remote_GO overview](docs/assets/remote-go-overview.svg)
 
+PDF version: [remote-go-overview.pdf](docs/assets/remote-go-overview.pdf)
+
 ## When To Use It
 
 | Scenario | What Remote_GO does |

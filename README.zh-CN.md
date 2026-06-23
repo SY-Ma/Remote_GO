@@ -10,6 +10,8 @@ Remote_GO 专注于常见的本地开发、远程运行实验流程。
 
 ![Remote_GO overview](docs/assets/remote-go-overview.svg)
 
+PDF version: [remote-go-overview.pdf](docs/assets/remote-go-overview.pdf)
+
 ## 适用场景
 
 | 场景 | Remote_GO 能做什么 |

@@ -1,101 +1,95 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="680" viewBox="0 0 1000 680" role="img" aria-labelledby="title desc">
   <title id="title">Remote_GO overview</title>
-  <desc id="desc">A simplified overview of Remote_GO connecting a local project, a command layer, and remote servers.</desc>
+  <desc id="desc">A compact overview of Remote_GO connecting a local project, a command layer, remote servers, and returned outputs.</desc>
   <defs>
     <linearGradient id="page" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0" stop-color="#f8fafc"/>
       <stop offset="1" stop-color="#eef6ff"/>
     </linearGradient>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#0f172a" flood-opacity="0.10"/>
-    </filter>
-    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto">
       <path d="M0 0 L10 5 L0 10 Z" fill="#334155"/>
     </marker>
     <style>
-      .title { font: 750 44px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; letter-spacing: 0; }
-      .card-title { font: 750 28px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; letter-spacing: 0; }
-      .text { font: 650 18px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #334155; letter-spacing: 0; }
-      .small { font: 600 16px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #475569; letter-spacing: 0; }
-      .label { font: 720 16px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #334155; letter-spacing: 0; }
-      .mono { font: 750 17px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #0f172a; letter-spacing: 0; }
-      .effect { font: 750 24px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; letter-spacing: 0; }
-      .effect-sub { font: 600 17px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #475569; letter-spacing: 0; }
-      .number { font: 750 22px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; letter-spacing: 0; }
-      .card { stroke: #d8e2ef; stroke-width: 1.5; filter: url(#shadow); }
-      .chip { fill: #ffffff; stroke: #dbe4f0; stroke-width: 1.2; }
-      .flow-arrow { stroke: #334155; stroke-width: 3.6; fill: none; stroke-linecap: round; marker-end: url(#arrowhead); }
-      .divider { stroke: #fed7aa; stroke-width: 1.2; }
+      .title { font: 750 32px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; letter-spacing: 0; }
+      .card-title { font: 750 21px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; letter-spacing: 0; }
+      .text { font: 650 14.5px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #334155; letter-spacing: 0; }
+      .small { font: 600 12.8px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #475569; letter-spacing: 0; }
+      .label { font: 720 13.2px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #334155; letter-spacing: 0; }
+      .mono { font: 750 14.2px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #0f172a; letter-spacing: 0; }
+      .effect { font: 750 18px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; letter-spacing: 0; }
+      .effect-sub { font: 600 12.8px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #475569; letter-spacing: 0; }
+      .number { font: 750 16px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; letter-spacing: 0; }
+      .card { stroke: #c9d8e8; stroke-width: 1.7; }
+      .chip { fill: #ffffff; stroke: #d7e1ed; stroke-width: 1.2; }
+      .flow-arrow { stroke: #334155; stroke-width: 3.1; fill: none; stroke-linecap: round; marker-end: url(#arrowhead); }
+      .divider { stroke: #f5c48a; stroke-width: 1.2; }
     </style>
   </defs>
 
-  <rect width="1200" height="1200" fill="url(#page)"/>
-  <text x="600" y="92" text-anchor="middle" class="title">Local code to remote experiments</text>
+  <rect width="1000" height="680" fill="url(#page)"/>
+  <text x="500" y="54" text-anchor="middle" class="title">Local Code to Remote Experiments</text>
 
-  <rect x="55" y="185" width="270" height="370" rx="24" fill="#ffffff" class="card"/>
-  <text x="190" y="242" text-anchor="middle" class="card-title">Local project</text>
-  <rect x="90" y="295" width="200" height="52" rx="26" class="chip"/>
-  <text x="190" y="328" text-anchor="middle" class="text">Edit locally</text>
-  <rect x="75" y="370" width="230" height="52" rx="26" class="chip"/>
-  <text x="190" y="403" text-anchor="middle" class="text">RUN LOCAL COMMANDS</text>
-  <rect x="90" y="445" width="200" height="52" rx="26" class="chip"/>
-  <text x="190" y="478" text-anchor="middle" class="text">AI can call ./go</text>
+  <rect x="50" y="110" width="225" height="280" rx="18" fill="#ffffff" class="card"/>
+  <text x="162.5" y="154" text-anchor="middle" class="card-title">Local Project</text>
+  <rect x="73" y="185" width="179" height="42" rx="21" class="chip"/>
+  <text x="162.5" y="211" text-anchor="middle" class="text">Edit locally</text>
+  <rect x="65" y="240" width="195" height="42" rx="21" class="chip"/>
+  <text x="162.5" y="266" text-anchor="middle" class="text">Run local commands</text>
+  <rect x="73" y="295" width="179" height="42" rx="21" class="chip"/>
+  <text x="162.5" y="321" text-anchor="middle" class="text">AI can call ./go</text>
 
-  <text x="390" y="318" text-anchor="middle" class="label">Commands</text>
-  <text x="390" y="340" text-anchor="middle" class="label">or AI calls</text>
-  <path d="M340 370 H438" class="flow-arrow"/>
+  <text x="317" y="256" text-anchor="middle" class="label">Commands</text>
+  <text x="317" y="274" text-anchor="middle" class="label">or AI calls</text>
+  <path d="M292 290 H348" class="flow-arrow"/>
 
-  <rect x="455" y="150" width="290" height="440" rx="24" fill="#eff6ff" class="card"/>
-  <text x="600" y="208" text-anchor="middle" class="card-title">Remote_GO</text>
-  <rect x="495" y="250" width="210" height="46" rx="16" class="chip"/>
-  <text x="600" y="279" text-anchor="middle" class="mono">./go status</text>
-  <rect x="495" y="307" width="210" height="46" rx="16" class="chip"/>
-  <text x="600" y="336" text-anchor="middle" class="mono">./go run</text>
-  <rect x="495" y="364" width="210" height="46" rx="16" class="chip"/>
-  <text x="600" y="393" text-anchor="middle" class="mono">./go runs</text>
-  <rect x="495" y="421" width="210" height="46" rx="16" class="chip"/>
-  <text x="600" y="450" text-anchor="middle" class="mono">./go push</text>
-  <rect x="495" y="478" width="210" height="46" rx="16" class="chip"/>
-  <text x="600" y="507" text-anchor="middle" class="mono">./go pull</text>
-  <text x="600" y="558" text-anchor="middle" class="small">One project-level command layer</text>
+  <rect x="370" y="90" width="260" height="330" rx="18" fill="#eff6ff" class="card"/>
+  <text x="500" y="133" text-anchor="middle" class="card-title">Remote_GO</text>
+  <rect x="407.5" y="160" width="185" height="36" rx="13" class="chip"/>
+  <text x="500" y="183" text-anchor="middle" class="mono">./go status</text>
+  <rect x="407.5" y="206" width="185" height="36" rx="13" class="chip"/>
+  <text x="500" y="229" text-anchor="middle" class="mono">./go run</text>
+  <rect x="407.5" y="252" width="185" height="36" rx="13" class="chip"/>
+  <text x="500" y="275" text-anchor="middle" class="mono">./go runs</text>
+  <rect x="407.5" y="298" width="185" height="36" rx="13" class="chip"/>
+  <text x="500" y="321" text-anchor="middle" class="mono">./go push</text>
+  <rect x="407.5" y="344" width="185" height="36" rx="13" class="chip"/>
+  <text x="500" y="367" text-anchor="middle" class="mono">./go pull</text>
+  <text x="500" y="402" text-anchor="middle" class="small">One project-level command layer</text>
 
-  <text x="810" y="318" text-anchor="middle" class="label">SSH + rsync</text>
-  <text x="810" y="340" text-anchor="middle" class="label">operations</text>
-  <path d="M760 370 H858" class="flow-arrow"/>
+  <text x="683" y="256" text-anchor="middle" class="label">SSH + rsync</text>
+  <text x="683" y="274" text-anchor="middle" class="label">operations</text>
+  <path d="M652 290 H708" class="flow-arrow"/>
 
-  <rect x="875" y="185" width="270" height="370" rx="24" fill="#f0fdf4" class="card"/>
-  <text x="1010" y="242" text-anchor="middle" class="card-title">Remote servers</text>
-  <rect x="910" y="295" width="200" height="52" rx="26" class="chip"/>
-  <text x="1010" y="328" text-anchor="middle" class="text">Run programs</text>
-  <rect x="910" y="370" width="200" height="52" rx="26" class="chip"/>
-  <text x="1010" y="403" text-anchor="middle" class="text">Show progress</text>
-  <rect x="910" y="445" width="200" height="52" rx="26" class="chip"/>
-  <text x="1010" y="478" text-anchor="middle" class="text">Return results</text>
+  <rect x="725" y="110" width="225" height="280" rx="18" fill="#f0fdf4" class="card"/>
+  <text x="837.5" y="154" text-anchor="middle" class="card-title">Remote Servers</text>
+  <rect x="748" y="185" width="179" height="42" rx="21" class="chip"/>
+  <text x="837.5" y="211" text-anchor="middle" class="text">Run programs</text>
+  <rect x="748" y="240" width="179" height="42" rx="21" class="chip"/>
+  <text x="837.5" y="266" text-anchor="middle" class="text">Show progress</text>
+  <rect x="748" y="295" width="179" height="42" rx="21" class="chip"/>
+  <text x="837.5" y="321" text-anchor="middle" class="text">Return outputs</text>
 
-  <path d="M1045 670 H155" class="flow-arrow"/>
-  <rect x="395" y="648" width="410" height="44" rx="22" fill="#ffffff" stroke="#dbe4f0" stroke-width="1.2"/>
-  <text x="600" y="676" text-anchor="middle" class="label">Output back: logs, outputs, models</text>
+  <path d="M850 460 H150" class="flow-arrow"/>
+  <rect x="340" y="438" width="320" height="44" rx="22" fill="#ffffff" stroke="#d7e1ed" stroke-width="1.2"/>
+  <text x="500" y="466" text-anchor="middle" class="label">Output back: logs, outputs, models</text>
 
-  <rect x="100" y="730" width="1000" height="350" rx="28" fill="#fff7ed" class="card"/>
-  <text x="600" y="790" text-anchor="middle" class="card-title">Main effect</text>
-  <line x1="433" y1="840" x2="433" y2="1020" class="divider"/>
-  <line x1="767" y1="840" x2="767" y2="1020" class="divider"/>
+  <rect x="80" y="510" width="840" height="135" rx="20" fill="#fff7ed" class="card"/>
+  <text x="500" y="542" text-anchor="middle" class="card-title">Main Effect</text>
+  <line x1="360" y1="558" x2="360" y2="628" class="divider"/>
+  <line x1="640" y1="558" x2="640" y2="628" class="divider"/>
 
-  <circle cx="267" cy="875" r="28" fill="#ffedd5" stroke="#fdba74" stroke-width="1.2"/>
-  <text x="267" y="883" text-anchor="middle" class="number">1</text>
-  <text x="267" y="940" text-anchor="middle" class="effect">Local command</text>
-  <text x="267" y="975" text-anchor="middle" class="effect-sub">edit locally, execute</text>
-  <text x="267" y="1002" text-anchor="middle" class="effect-sub">on the server</text>
+  <circle cx="220" cy="574" r="20" fill="#ffedd5" stroke="#fbad4d" stroke-width="1.2"/>
+  <text x="220" y="580" text-anchor="middle" class="number">1</text>
+  <text x="220" y="612" text-anchor="middle" class="effect">Local Command</text>
+  <text x="220" y="635" text-anchor="middle" class="effect-sub">edit locally, execute on server</text>
 
-  <circle cx="600" cy="875" r="28" fill="#ffedd5" stroke="#fdba74" stroke-width="1.2"/>
-  <text x="600" y="883" text-anchor="middle" class="number">2</text>
-  <text x="600" y="940" text-anchor="middle" class="effect">See experiments</text>
-  <text x="600" y="975" text-anchor="middle" class="effect-sub">recent runs in one</text>
-  <text x="600" y="1002" text-anchor="middle" class="effect-sub">clear local view</text>
+  <circle cx="500" cy="574" r="20" fill="#ffedd5" stroke="#fbad4d" stroke-width="1.2"/>
+  <text x="500" y="580" text-anchor="middle" class="number">2</text>
+  <text x="500" y="612" text-anchor="middle" class="effect">See Experiments</text>
+  <text x="500" y="635" text-anchor="middle" class="effect-sub">recent runs in one local view</text>
 
-  <circle cx="933" cy="875" r="28" fill="#ffedd5" stroke="#fdba74" stroke-width="1.2"/>
-  <text x="933" y="883" text-anchor="middle" class="number">3</text>
-  <text x="933" y="940" text-anchor="middle" class="effect">Sync results</text>
-  <text x="933" y="975" text-anchor="middle" class="effect-sub">bring back logs, outputs,</text>
-  <text x="933" y="1002" text-anchor="middle" class="effect-sub">and model files</text>
+  <circle cx="780" cy="574" r="20" fill="#ffedd5" stroke="#fbad4d" stroke-width="1.2"/>
+  <text x="780" y="580" text-anchor="middle" class="number">3</text>
+  <text x="780" y="612" text-anchor="middle" class="effect">Sync Results</text>
+  <text x="780" y="635" text-anchor="middle" class="effect-sub">logs, outputs, models</text>
 </svg>
