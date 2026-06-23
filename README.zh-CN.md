@@ -2,7 +2,7 @@
 
 [English](README.md) | 中文
 
-Remote_GO 是一个项目本地化的 SSH/tmux 远程实验命令工具。它用于读取远程 GPU 状态、启动实验、跟踪最近运行记录，并按规则把日志或结果拉回本地。
+Remote_GO 是一个项目本地化的 SSH/tmux 远程实验命令工具。它用于读取远程 GPU 状态、在启动实验前同步本地文件、跟踪最近运行记录，并按规则把日志或结果拉回本地。
 
 它也可以给上层 AI 助手提供一个稳定的本地工具层，让 AI 通过 run id、结构化状态和固定命令更准确地协助管理远程实验。
 
@@ -133,12 +133,12 @@ sync:
 | --- | --- |
 | `./go init` | 在项目中创建 Remote_GO 文件 |
 | `./go status [--host gpu1]` | 查看配置的远程 GPU 状态 |
-| `./go run -- python 程序入口.py` | 推送代码并启动远程 tmux 实验 |
+| `./go run -- python 程序入口.py` | 同步当前本地项目，然后启动远程 tmux 实验 |
 | `./go runs [--limit 30]` | 查看最近运行记录，默认显示 12 条 |
 | `./go log <run_id>` | 查看某次远程实验的日志尾部 |
 | `./go kill <run_id>` | 停止自己的某个 run |
-| `./go push [--host gpu1]` | 推送项目文件到配置好的远程工作目录 |
-| `./go pull` | 把配置好的日志、输出和模型文件拉回本地 |
+| `./go push [--host gpu1]` | 手动同步项目文件到配置好的远程工作目录 |
+| `./go pull` | 手动把配置好的日志、输出和模型文件拉回本地 |
 | `./go refresh` | 根据服务器实时事实重建当前运行视图 |
 
 启动实验示例：
@@ -148,7 +148,18 @@ sync:
 ./go run --host gpu1 --gpu 0 --name baseline -- python 程序入口.py --epochs 100
 ```
 
+`./go run` 会先执行上传同步，然后在配置好的远程 tmux session 中启动命令。通常不需要在每次实验前手动执行 `./go push`；只有想更新远程工作目录但不启动实验时，才使用 `./go push`。
+
 如果想先确认会停止哪个远程进程，可以使用 `./go kill <run_id> --dry-run`。
+
+也可以直接登录服务器观察程序执行：
+
+```bash
+ssh my_user@gpu1
+tmux attach -t M
+```
+
+这里的 SSH 目标来自 `.remote_go/config.yaml` 里的 `hosts[].ssh`，tmux session 名称来自 `tmux.session`。`./go run` 成功提交后也会打印这条 tmux attach 提示。
 
 查看 run 示例：
 
@@ -194,8 +205,8 @@ python -m build
 
 ## 安全设计
 
-- `go run` 同步到 `remote.root/releases/<run_id>/`。
-- `go push` 默认同步到 `remote.root/workspace/`。
+- `go run` 会先把当前本地项目同步到 `remote.root/releases/<run_id>/`，然后再启动实验。
+- `go push` 默认手动同步当前本地项目到 `remote.root/workspace/`。
 - `go pull` 只使用 `.remote_go/pull.yaml` 中的白名单规则。
 - 远程路径如果逃逸出 `remote.root` 会被拒绝。
 - 运行历史追加写入 `.remote_go/state/registry.jsonl`。

@@ -36,8 +36,8 @@
   <text x="190" y="242" text-anchor="middle" class="card-title">Local project</text>
   <rect x="90" y="295" width="200" height="52" rx="26" class="chip"/>
   <text x="190" y="328" text-anchor="middle" class="text">Edit locally</text>
-  <rect x="90" y="370" width="200" height="52" rx="26" class="chip"/>
-  <text x="190" y="403" text-anchor="middle" class="text">Keep files here</text>
+  <rect x="75" y="370" width="230" height="52" rx="26" class="chip"/>
+  <text x="190" y="403" text-anchor="middle" class="text">RUN LOCAL COMMANDS</text>
   <rect x="90" y="445" width="200" height="52" rx="26" class="chip"/>
   <text x="190" y="478" text-anchor="middle" class="text">AI can call ./go</text>
 
@@ -72,9 +72,9 @@
   <rect x="910" y="445" width="200" height="52" rx="26" class="chip"/>
   <text x="1010" y="478" text-anchor="middle" class="text">Return results</text>
 
-  <rect x="395" y="602" width="410" height="44" rx="22" fill="#ffffff" stroke="#dbe4f0" stroke-width="1.2"/>
-  <text x="600" y="630" text-anchor="middle" class="label">Results back: logs, outputs, models</text>
   <path d="M1045 670 H155" class="flow-arrow"/>
+  <rect x="395" y="648" width="410" height="44" rx="22" fill="#ffffff" stroke="#dbe4f0" stroke-width="1.2"/>
+  <text x="600" y="676" text-anchor="middle" class="label">Output back: logs, outputs, models</text>
 
   <rect x="100" y="730" width="1000" height="350" rx="28" fill="#fff7ed" class="card"/>
   <text x="600" y="790" text-anchor="middle" class="card-title">Main effect</text>
@@ -83,8 +83,8 @@
 
   <circle cx="267" cy="875" r="28" fill="#ffedd5" stroke="#fdba74" stroke-width="1.2"/>
   <text x="267" y="883" text-anchor="middle" class="number">1</text>
-  <text x="267" y="940" text-anchor="middle" class="effect">Run remotely</text>
-  <text x="267" y="975" text-anchor="middle" class="effect-sub">write locally, execute</text>
+  <text x="267" y="940" text-anchor="middle" class="effect">Local command</text>
+  <text x="267" y="975" text-anchor="middle" class="effect-sub">edit locally, execute</text>
   <text x="267" y="1002" text-anchor="middle" class="effect-sub">on the server</text>
 
   <circle cx="600" cy="875" r="28" fill="#ffedd5" stroke="#fdba74" stroke-width="1.2"/>

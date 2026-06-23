@@ -2,7 +2,7 @@
 
 English | [中文](README.zh-CN.md)
 
-Remote_GO is a project-local command tool for SSH/tmux based remote experiment workflows. It helps you check remote GPU status, launch your experiments, track recent runs, and pull back selected logs or outputs.
+Remote_GO is a project-local command tool for SSH/tmux based remote experiment workflows. It helps you check remote GPU status, sync local files before launching experiments, track recent runs, and pull back selected logs or outputs.
 
 It can also act as a stable helper layer for upper-layer AI assistants, so they can manage remote experiments through run ids, structured status, and predictable commands.
 
@@ -133,12 +133,12 @@ Fields you normally fill:
 | --- | --- |
 | `./go init` | Create Remote_GO files in a project |
 | `./go status [--host gpu1]` | Show configured remote GPU status |
-| `./go run -- python entrypoint.py` | Push code and launch a remote tmux run |
+| `./go run -- python entrypoint.py` | Sync the current local project, then launch a remote tmux run |
 | `./go runs [--limit 30]` | Show recent run records. Default limit is 12 |
 | `./go log <run_id>` | Tail one remote run log |
 | `./go kill <run_id>` | Stop one of your own runs |
-| `./go push [--host gpu1]` | Push project files to the configured remote workspace |
-| `./go pull` | Pull configured logs, outputs, and model files back locally |
+| `./go push [--host gpu1]` | Manually sync project files to the configured remote workspace |
+| `./go pull` | Manually pull configured logs, outputs, and model files back locally |
 | `./go refresh` | Rebuild the current run view from live server facts |
 
 Launch examples:
@@ -148,7 +148,18 @@ Launch examples:
 ./go run --host gpu1 --gpu 0 --name baseline -- python entrypoint.py --epochs 100
 ```
 
+`./go run` runs the upload step first, then starts the command in the configured remote tmux session. You usually do not need to run `./go push` before each experiment; use `./go push` when you want to update the remote workspace without launching a run.
+
 Use `./go kill <run_id> --dry-run` if you want to preview which remote process would be stopped.
+
+Watch directly on the server:
+
+```bash
+ssh my_user@gpu1
+tmux attach -t M
+```
+
+Use the SSH target from `hosts[].ssh` and the session name from `tmux.session` in `.remote_go/config.yaml`. Remote_GO also prints this tmux attach hint after `./go run`.
 
 Run list examples:
 
@@ -194,8 +205,8 @@ python -m build
 
 ## Safety Notes
 
-- `go run` syncs into `remote.root/releases/<run_id>/`.
-- `go push` defaults to `remote.root/workspace/`.
+- `go run` syncs the current local project into `remote.root/releases/<run_id>/` before launching.
+- `go push` manually syncs the current local project to `remote.root/workspace/` by default.
 - `go pull` uses allow-list rules from `.remote_go/pull.yaml`.
 - Remote paths are rejected if they escape `remote.root`.
 - History is append-only in `.remote_go/state/registry.jsonl`.
