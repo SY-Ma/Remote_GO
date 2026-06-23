@@ -4,7 +4,7 @@ English | [中文](README.zh-CN.md)
 
 Remote_GO is a project-local command tool for SSH/tmux based remote experiment workflows. It helps you check remote GPU status, launch your experiments, track recent runs, and pull back selected logs or outputs.
 
-It can also act as a stable helper layer for AI assistants such as Codex or Claude, so they can manage remote experiments through run ids, structured status, and predictable commands.
+It can also act as a stable helper layer for upper-layer AI assistants, so they can manage remote experiments through run ids, structured status, and predictable commands.
 
 Remote_GO focuses on the common local-to-remote experiment workflow.
 
@@ -17,7 +17,7 @@ Remote_GO focuses on the common local-to-remote experiment workflow.
 | You often run multiple experiments for the same project | Show recent runs, their status, host, GPU, command, and log location |
 | You need to check a running or finished experiment | Tail the remote log from your local terminal |
 | You want selected logs or results back on your laptop | Pull only the configured logs or output files back into the local project |
-| You want Codex, Claude, or another AI assistant to help with remote experiments | Provide a stable local tool the AI can read and call instead of parsing scattered server commands |
+| You want an upper-layer AI assistant to help with remote experiments | Provide a stable local tool the AI can read and call instead of parsing scattered server commands |
 
 ## Requirements
 
