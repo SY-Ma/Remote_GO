@@ -2,11 +2,11 @@
 
 English | [中文](README.zh-CN.md)
 
-Remote_GO is a project-local command tool for SSH/tmux based remote experiment workflows. It helps you keep a lightweight view of remote GPU status, launch your own experiments, track recent runs, and pull back selected logs or outputs.
+Remote_GO is a project-local command tool for SSH/tmux based remote experiment workflows. It helps you check remote GPU status, launch your experiments, track recent runs, and pull back selected logs or outputs.
 
-It also gives AI assistants and scripts a clean management layer. Instead of asking an AI to infer server state from scattered shell commands, Remote_GO keeps stable run ids, project-local records, structured status, and predictable commands that are easier to read, verify, and call safely.
+It can also act as a stable helper layer for AI assistants such as Codex or Claude, so they can manage remote experiments through run ids, structured status, and predictable commands.
 
-It is intentionally small. Remote_GO is not a scheduler, cloud platform, queue system, or full experiment tracker.
+Remote_GO focuses on the common local-to-remote experiment workflow.
 
 ## When To Use It
 
@@ -17,7 +17,7 @@ It is intentionally small. Remote_GO is not a scheduler, cloud platform, queue s
 | You often run multiple experiments for the same project | Show recent runs, their status, host, GPU, command, and log location |
 | You need to check a running or finished experiment | Tail the remote log from your local terminal |
 | You want selected logs or results back on your laptop | Pull only the configured logs or output files back into the local project |
-| You want an AI assistant to help manage remote experiments | Give the AI stable run ids, readable state, and JSON command output instead of scattered server commands |
+| You want Codex, Claude, or another AI assistant to help with remote experiments | Provide a stable local tool the AI can read and call instead of parsing scattered server commands |
 
 ## Requirements
 
@@ -39,24 +39,34 @@ Remote hosts:
 
 ## Install
 
-Clone Remote_GO and install its local Python dependency:
+Recommended for most users: download Remote_GO from GitHub with `Code -> Download ZIP`, unzip it, rename the folder to `Remote_GO`, then place it inside your project root.
 
-```bash
-git clone https://github.com/SY-Ma/Remote_GO.git
-python -m pip install -r Remote_GO/requirements.txt
+```text
+your_project/
+  Remote_GO/
+  train_or_entrypoint.py
 ```
 
-Initialize your own project from its project root:
+Install the local Python dependency and initialize the project:
 
 ```bash
 cd /path/to/your_project
-/path/to/Remote_GO/go init
+python -m pip install -r Remote_GO/requirements.txt
+./Remote_GO/go init
 ```
 
 After that, use the generated project-local command:
 
 ```bash
 ./go status
+```
+
+Engineering option from your project root:
+
+```bash
+git clone https://github.com/SY-Ma/Remote_GO.git Remote_GO
+python -m pip install -r Remote_GO/requirements.txt
+./Remote_GO/go init
 ```
 
 ## Configure A Project
@@ -78,30 +88,30 @@ Edit `.remote_go/config.yaml` first:
 
 ```yaml
 project:
-  id: my_project
-  label: My Project
+  id: my_project          # required; short stable id used inside run_id values
+  label: My Project       # optional; human-readable project name shown in tables
 
 remote:
-  root: /home/my_user/projects/my_project
+  root: /home/my_user/projects/my_project  # required; absolute project directory on each remote host
   env:
-    type: conda
-    name: pytorch
+    type: conda           # required; currently only conda is supported
+    name: pytorch         # required; remote conda environment name
 
 tmux:
-  session: M
-  window: M
+  session: M              # optional; tmux session name, default is M
+  window: M               # optional; tmux window name, default is M
 
 hosts:
   # Hosts are tried from top to bottom when --host is not provided.
-  - name: gpu1
-    ssh: my_user@gpu1
-  - name: gpu2
-    ssh: my_user@gpu2
+  - name: gpu1            # required; short host name used by ./go --host
+    ssh: my_user@gpu1     # required; SSH target accepted by your local ssh command
+  - name: gpu2            # optional; add more hosts if you use more than one server
+    ssh: my_user@gpu2     # required for each host
 
 sync:
-  push_exclude_file: .remote_go/push.exclude
-  pull_rules_file: .remote_go/pull.yaml
-  push_target: workspace  # go push uploads to remote.root/workspace/
+  push_exclude_file: .remote_go/push.exclude  # optional; upload ignore rules
+  pull_rules_file: .remote_go/pull.yaml       # optional; download allow-list rules
+  push_target: workspace                      # optional; go push uploads to remote.root/workspace/
 ```
 
 Fields you normally fill:
@@ -158,14 +168,12 @@ Edit `.remote_go/pull.yaml` to choose which logs, outputs, or model files are co
 
 ## AI-Friendly Use
 
-Remote_GO is designed to stay easy for people first, while still being predictable for an AI layer above it. The important surfaces are:
+Remote_GO can provide a stable local interface for an upper-layer AI assistant. Useful machine-readable commands include:
 
 - `./go status --json`: read current host/GPU/process state.
 - `./go runs --json`: read recent runs with stable `run_id`, host, GPU, command, log path, and status.
 - `./go refresh --json`: rebuild the current run view from live server facts.
-- `./go run --dry-run -- ...` and `./go kill <run_id> --dry-run`: preview remote actions before executing them.
-
-This makes it easier for an AI assistant to manage experiments accurately because it can refer to one project-local interface instead of guessing from shell history, tmux panes, process names, or ad hoc log files.
+- `./go run --dry-run -- ...` and `./go kill <run_id> --dry-run`: preview remote actions.
 
 ## Build And Validate
 

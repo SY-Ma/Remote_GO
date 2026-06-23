@@ -2,11 +2,11 @@
 
 [English](README.md) | 中文
 
-Remote_GO 是一个项目本地化的 SSH/tmux 远程实验命令工具。它用于读取远程 GPU 状态、启动自己的实验、跟踪最近运行记录，并按规则把日志或结果拉回本地。
+Remote_GO 是一个项目本地化的 SSH/tmux 远程实验命令工具。它用于读取远程 GPU 状态、启动实验、跟踪最近运行记录，并按规则把日志或结果拉回本地。
 
-它也可以作为 AI 助手或脚本管理远程实验的干净接口。相比让 AI 从零散的 shell 命令、tmux 窗口和进程名里猜测服务器状态，Remote_GO 提供稳定的 run id、项目本地记录、结构化状态和可预期的命令，更容易被 AI 准确读取、验证和调用。
+它也可以给 Codex、Claude 这类 AI 助手提供一个稳定的本地工具层，让 AI 通过 run id、结构化状态和固定命令更准确地协助管理远程实验。
 
-它刻意保持轻量。Remote_GO 不是调度系统、云平台、队列系统，也不是完整实验管理平台。
+Remote_GO 专注于常见的本地开发、远程运行实验流程。
 
 ## 适用场景
 
@@ -17,7 +17,7 @@ Remote_GO 是一个项目本地化的 SSH/tmux 远程实验命令工具。它用
 | 同一个项目经常同时跑多个实验 | 查看最近执行过的 run、当前状态、所在服务器、GPU、命令和日志位置 |
 | 需要检查正在运行或已经结束的实验 | 直接在本地终端查看远程日志 |
 | 想把日志或结果拉回本地 | 按配置规则只拉回需要的日志或输出文件 |
-| 想让 AI 助手协助管理远程实验 | 给 AI 提供稳定的 run id、可读状态和 JSON 输出，而不是让它直接解析零散服务器命令 |
+| 想让 Codex、Claude 等 AI 助手协助管理远程实验 | 给 AI 一个稳定的本地工具，而不是让它直接解析零散的服务器命令 |
 
 ## 环境要求
 
@@ -39,24 +39,34 @@ Remote_GO 是一个项目本地化的 SSH/tmux 远程实验命令工具。它用
 
 ## 下载和安装
 
-克隆 Remote_GO，并安装本地 Python 依赖：
+推荐给大多数用户：在 GitHub 上点击 `Code -> Download ZIP` 下载 Remote_GO，解压后把文件夹重命名为 `Remote_GO`，再放到自己的项目根目录下。
 
-```bash
-git clone https://github.com/SY-Ma/Remote_GO.git
-python -m pip install -r Remote_GO/requirements.txt
+```text
+your_project/
+  Remote_GO/
+  train_or_entrypoint.py
 ```
 
-进入你自己的项目根目录并初始化：
+安装本地 Python 依赖，并初始化项目：
 
 ```bash
 cd /path/to/your_project
-/path/to/Remote_GO/go init
+python -m pip install -r Remote_GO/requirements.txt
+./Remote_GO/go init
 ```
 
 之后在你的项目里使用生成的本地命令：
 
 ```bash
 ./go status
+```
+
+在项目根目录下使用 git 的方式：
+
+```bash
+git clone https://github.com/SY-Ma/Remote_GO.git Remote_GO
+python -m pip install -r Remote_GO/requirements.txt
+./Remote_GO/go init
 ```
 
 ## 配置项目
@@ -78,30 +88,30 @@ go                   # 项目本地命令包装脚本
 
 ```yaml
 project:
-  id: my_project
-  label: My Project
+  id: my_project          # 必填；用于生成稳定的 run_id
+  label: My Project       # 可选；在 status/runs 表格中显示的项目名
 
 remote:
-  root: /home/my_user/projects/my_project
+  root: /home/my_user/projects/my_project  # 必填；远程服务器上的项目绝对路径
   env:
-    type: conda
-    name: pytorch
+    type: conda           # 必填；目前支持 conda
+    name: pytorch         # 必填；远程 conda 环境名
 
 tmux:
-  session: M
-  window: M
+  session: M              # 可选；tmux session 名称，默认 M
+  window: M               # 可选；tmux window 名称，默认 M
 
 hosts:
   # 不指定 --host 时，会按从上到下的顺序尝试主机。
-  - name: gpu1
-    ssh: my_user@gpu1
-  - name: gpu2
-    ssh: my_user@gpu2
+  - name: gpu1            # 必填；./go --host 使用的短名称
+    ssh: my_user@gpu1     # 必填；本地 ssh 命令可识别的目标
+  - name: gpu2            # 可选；有多台服务器时继续添加
+    ssh: my_user@gpu2     # 每个 host 都必填
 
 sync:
-  push_exclude_file: .remote_go/push.exclude
-  pull_rules_file: .remote_go/pull.yaml
-  push_target: workspace  # go push 会上传到 remote.root/workspace/
+  push_exclude_file: .remote_go/push.exclude  # 可选；上传忽略规则
+  pull_rules_file: .remote_go/pull.yaml       # 可选；下载白名单规则
+  push_target: workspace                      # 可选；go push 上传到 remote.root/workspace/
 ```
 
 通常需要填写这些字段：
@@ -158,14 +168,12 @@ sync:
 
 ## 面向 AI 的使用
 
-Remote_GO 的第一目标仍然是让人用起来简单；在不增加人工使用负担的前提下，它也提供适合上层 AI 调用的稳定接口：
+Remote_GO 可以为上层 AI 助手提供稳定的本地调用接口。常用的结构化命令包括：
 
 - `./go status --json`：读取当前服务器、GPU 和进程状态。
 - `./go runs --json`：读取最近 run 的 `run_id`、服务器、GPU、命令、日志路径和状态。
 - `./go refresh --json`：根据服务器实时事实重建当前运行视图。
-- `./go run --dry-run -- ...` 和 `./go kill <run_id> --dry-run`：先预览远程动作，再决定是否执行。
-
-这样 AI 不需要猜测 shell 历史、tmux 窗口、进程名或临时日志文件，而是可以通过项目本地统一接口做更准确的实验管理。
+- `./go run --dry-run -- ...` 和 `./go kill <run_id> --dry-run`：预览远程动作。
 
 ## 构建和验证
 
