@@ -1,104 +1,101 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1200" viewBox="0 0 1200 1200" role="img" aria-labelledby="title desc">
   <title id="title">Remote_GO overview</title>
-  <desc id="desc">Diagram showing Remote_GO as a local command layer between users or AI assistants and remote GPU servers.</desc>
+  <desc id="desc">A simplified overview of Remote_GO connecting a local project, a command layer, and remote servers.</desc>
   <defs>
-    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#f7fafc"/>
-      <stop offset="1" stop-color="#edf4ff"/>
-    </linearGradient>
-    <linearGradient id="local" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#ecfeff"/>
-      <stop offset="1" stop-color="#dbeafe"/>
-    </linearGradient>
-    <linearGradient id="remote" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#f0fdf4"/>
-      <stop offset="1" stop-color="#dcfce7"/>
-    </linearGradient>
-    <linearGradient id="state" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#fff7ed"/>
-      <stop offset="1" stop-color="#ffedd5"/>
+    <linearGradient id="page" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fafc"/>
+      <stop offset="1" stop-color="#eef6ff"/>
     </linearGradient>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#1f2937" flood-opacity="0.12"/>
+      <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#0f172a" flood-opacity="0.10"/>
     </filter>
-    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
-      <path d="M2,2 L10,6 L2,10 Z" fill="#475569"/>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0 0 L10 5 L0 10 Z" fill="#334155"/>
     </marker>
     <style>
-      .title { font: 700 34px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; }
-      .subtitle { font: 500 17px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #475569; }
-      .label { font: 700 20px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; }
-      .small { font: 500 15px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #334155; }
-      .tiny { font: 600 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #475569; }
-      .code { font: 700 14px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #0f172a; }
-      .panel { stroke: #dbe4f0; stroke-width: 1.5; filter: url(#shadow); }
-      .pill { fill: #ffffff; stroke: #dbe4f0; stroke-width: 1.2; }
-      .line { stroke: #475569; stroke-width: 2.4; fill: none; marker-end: url(#arrow); }
-      .softline { stroke: #94a3b8; stroke-width: 1.8; fill: none; marker-end: url(#arrow); }
+      .title { font: 750 44px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; letter-spacing: 0; }
+      .card-title { font: 750 28px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; letter-spacing: 0; }
+      .text { font: 650 18px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #334155; letter-spacing: 0; }
+      .small { font: 600 16px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #475569; letter-spacing: 0; }
+      .label { font: 720 16px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #334155; letter-spacing: 0; }
+      .mono { font: 750 17px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #0f172a; letter-spacing: 0; }
+      .effect { font: 750 24px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; letter-spacing: 0; }
+      .effect-sub { font: 600 17px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #475569; letter-spacing: 0; }
+      .number { font: 750 22px Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; letter-spacing: 0; }
+      .card { stroke: #d8e2ef; stroke-width: 1.5; filter: url(#shadow); }
+      .chip { fill: #ffffff; stroke: #dbe4f0; stroke-width: 1.2; }
+      .flow-arrow { stroke: #334155; stroke-width: 3.6; fill: none; stroke-linecap: round; marker-end: url(#arrowhead); }
+      .divider { stroke: #fed7aa; stroke-width: 1.2; }
     </style>
   </defs>
 
-  <rect width="1200" height="680" fill="url(#bg)"/>
+  <rect width="1200" height="1200" fill="url(#page)"/>
+  <text x="600" y="92" text-anchor="middle" class="title">Local code to remote experiments</text>
 
-  <text x="70" y="72" class="title">Remote_GO: local commands for remote GPU experiments</text>
-  <text x="70" y="104" class="subtitle">Human-friendly workflow with stable state for scripts and upper-layer AI assistants.</text>
+  <rect x="55" y="185" width="270" height="370" rx="24" fill="#ffffff" class="card"/>
+  <text x="190" y="242" text-anchor="middle" class="card-title">Local project</text>
+  <rect x="90" y="295" width="200" height="52" rx="26" class="chip"/>
+  <text x="190" y="328" text-anchor="middle" class="text">Edit locally</text>
+  <rect x="90" y="370" width="200" height="52" rx="26" class="chip"/>
+  <text x="190" y="403" text-anchor="middle" class="text">Keep files here</text>
+  <rect x="90" y="445" width="200" height="52" rx="26" class="chip"/>
+  <text x="190" y="478" text-anchor="middle" class="text">AI can call ./go</text>
 
-  <rect x="70" y="145" width="230" height="250" rx="18" fill="#ffffff" class="panel"/>
-  <text x="100" y="190" class="label">User / AI layer</text>
-  <rect x="100" y="220" width="170" height="42" rx="21" class="pill"/>
-  <text x="125" y="247" class="small">Local IDE edits</text>
-  <rect x="100" y="278" width="170" height="42" rx="21" class="pill"/>
-  <text x="118" y="305" class="small">AI reads JSON</text>
-  <rect x="100" y="336" width="170" height="42" rx="21" class="pill"/>
-  <text x="116" y="363" class="small">One-line actions</text>
+  <text x="390" y="318" text-anchor="middle" class="label">Commands</text>
+  <text x="390" y="340" text-anchor="middle" class="label">or AI calls</text>
+  <path d="M340 370 H438" class="flow-arrow"/>
 
-  <rect x="380" y="132" width="440" height="290" rx="20" fill="url(#local)" class="panel"/>
-  <text x="420" y="178" class="label">Local project + Remote_GO</text>
-  <text x="420" y="206" class="small">Project config, host list, sync rules, run registry</text>
+  <rect x="455" y="150" width="290" height="440" rx="24" fill="#eff6ff" class="card"/>
+  <text x="600" y="208" text-anchor="middle" class="card-title">Remote_GO</text>
+  <rect x="495" y="250" width="210" height="46" rx="16" class="chip"/>
+  <text x="600" y="279" text-anchor="middle" class="mono">./go status</text>
+  <rect x="495" y="307" width="210" height="46" rx="16" class="chip"/>
+  <text x="600" y="336" text-anchor="middle" class="mono">./go run</text>
+  <rect x="495" y="364" width="210" height="46" rx="16" class="chip"/>
+  <text x="600" y="393" text-anchor="middle" class="mono">./go runs</text>
+  <rect x="495" y="421" width="210" height="46" rx="16" class="chip"/>
+  <text x="600" y="450" text-anchor="middle" class="mono">./go push</text>
+  <rect x="495" y="478" width="210" height="46" rx="16" class="chip"/>
+  <text x="600" y="507" text-anchor="middle" class="mono">./go pull</text>
+  <text x="600" y="558" text-anchor="middle" class="small">One project-level command layer</text>
 
-  <rect x="420" y="236" width="160" height="44" rx="12" class="pill"/>
-  <text x="445" y="264" class="code">./go status</text>
-  <rect x="620" y="236" width="160" height="44" rx="12" class="pill"/>
-  <text x="650" y="264" class="code">./go run</text>
-  <rect x="420" y="300" width="160" height="44" rx="12" class="pill"/>
-  <text x="452" y="328" class="code">./go runs</text>
-  <rect x="620" y="300" width="160" height="44" rx="12" class="pill"/>
-  <text x="657" y="328" class="code">./go log</text>
-  <rect x="420" y="364" width="160" height="44" rx="12" class="pill"/>
-  <text x="454" y="392" class="code">./go pull</text>
-  <rect x="620" y="364" width="160" height="44" rx="12" class="pill"/>
-  <text x="645" y="392" class="code">./go refresh</text>
+  <text x="810" y="318" text-anchor="middle" class="label">SSH + rsync</text>
+  <text x="810" y="340" text-anchor="middle" class="label">operations</text>
+  <path d="M760 370 H858" class="flow-arrow"/>
 
-  <rect x="900" y="145" width="230" height="250" rx="18" fill="url(#remote)" class="panel"/>
-  <text x="940" y="190" class="label">GPU servers</text>
-  <rect x="930" y="220" width="170" height="46" rx="12" class="pill"/>
-  <text x="956" y="248" class="small">host: gpu1</text>
-  <rect x="930" y="284" width="170" height="46" rx="12" class="pill"/>
-  <text x="956" y="312" class="small">host: gpu2</text>
-  <rect x="930" y="348" width="170" height="46" rx="12" class="pill"/>
-  <text x="946" y="376" class="small">tmux + conda</text>
+  <rect x="875" y="185" width="270" height="370" rx="24" fill="#f0fdf4" class="card"/>
+  <text x="1010" y="242" text-anchor="middle" class="card-title">Remote servers</text>
+  <rect x="910" y="295" width="200" height="52" rx="26" class="chip"/>
+  <text x="1010" y="328" text-anchor="middle" class="text">Run programs</text>
+  <rect x="910" y="370" width="200" height="52" rx="26" class="chip"/>
+  <text x="1010" y="403" text-anchor="middle" class="text">Show progress</text>
+  <rect x="910" y="445" width="200" height="52" rx="26" class="chip"/>
+  <text x="1010" y="478" text-anchor="middle" class="text">Return results</text>
 
-  <path d="M300 270 C330 270 345 270 380 270" class="line"/>
-  <text x="318" y="252" class="tiny">commands</text>
-  <path d="M820 270 C850 270 870 270 900 270" class="line"/>
-  <text x="830" y="252" class="tiny">SSH / rsync / tmux</text>
-  <path d="M900 330 C865 430 805 470 745 496" class="softline"/>
-  <text x="794" y="438" class="tiny">logs, outputs, models</text>
-  <path d="M455 496 C390 465 340 430 300 365" class="softline"/>
-  <text x="330" y="458" class="tiny">tables + JSON</text>
+  <rect x="395" y="602" width="410" height="44" rx="22" fill="#ffffff" stroke="#dbe4f0" stroke-width="1.2"/>
+  <text x="600" y="630" text-anchor="middle" class="label">Results back: logs, outputs, models</text>
+  <path d="M1045 670 H155" class="flow-arrow"/>
 
-  <rect x="130" y="468" width="940" height="130" rx="18" fill="url(#state)" class="panel"/>
-  <text x="170" y="512" class="label">What Remote_GO makes explicit</text>
-  <rect x="170" y="536" width="150" height="38" rx="19" class="pill"/>
-  <text x="198" y="561" class="small">run_id</text>
-  <rect x="350" y="536" width="150" height="38" rx="19" class="pill"/>
-  <text x="386" y="561" class="small">host / GPU</text>
-  <rect x="530" y="536" width="150" height="38" rx="19" class="pill"/>
-  <text x="566" y="561" class="small">status</text>
-  <rect x="710" y="536" width="150" height="38" rx="19" class="pill"/>
-  <text x="746" y="561" class="small">log path</text>
-  <rect x="890" y="536" width="140" height="38" rx="19" class="pill"/>
-  <text x="914" y="561" class="small">results</text>
+  <rect x="100" y="730" width="1000" height="350" rx="28" fill="#fff7ed" class="card"/>
+  <text x="600" y="790" text-anchor="middle" class="card-title">Main effect</text>
+  <line x1="433" y1="840" x2="433" y2="1020" class="divider"/>
+  <line x1="767" y1="840" x2="767" y2="1020" class="divider"/>
 
-  <text x="150" y="638" class="subtitle">Effect: local editing stays simple, remote execution becomes visible, repeatable, and easier for humans or AI to manage.</text>
+  <circle cx="267" cy="875" r="28" fill="#ffedd5" stroke="#fdba74" stroke-width="1.2"/>
+  <text x="267" y="883" text-anchor="middle" class="number">1</text>
+  <text x="267" y="940" text-anchor="middle" class="effect">Run remotely</text>
+  <text x="267" y="975" text-anchor="middle" class="effect-sub">write locally, execute</text>
+  <text x="267" y="1002" text-anchor="middle" class="effect-sub">on the server</text>
+
+  <circle cx="600" cy="875" r="28" fill="#ffedd5" stroke="#fdba74" stroke-width="1.2"/>
+  <text x="600" y="883" text-anchor="middle" class="number">2</text>
+  <text x="600" y="940" text-anchor="middle" class="effect">See experiments</text>
+  <text x="600" y="975" text-anchor="middle" class="effect-sub">recent runs in one</text>
+  <text x="600" y="1002" text-anchor="middle" class="effect-sub">clear local view</text>
+
+  <circle cx="933" cy="875" r="28" fill="#ffedd5" stroke="#fdba74" stroke-width="1.2"/>
+  <text x="933" y="883" text-anchor="middle" class="number">3</text>
+  <text x="933" y="940" text-anchor="middle" class="effect">Sync results</text>
+  <text x="933" y="975" text-anchor="middle" class="effect-sub">bring back logs, outputs,</text>
+  <text x="933" y="1002" text-anchor="middle" class="effect-sub">and model files</text>
 </svg>
