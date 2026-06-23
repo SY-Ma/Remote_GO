@@ -8,13 +8,13 @@ It is intentionally small. Remote_GO is not a scheduler, cloud platform, queue s
 
 ## When To Use It
 
-| Scenario | Remote_GO helps with | Out of scope |
-| --- | --- | --- |
-| One local codebase, fixed lab servers | Keep host priority, SSH targets, remote root, and conda environment in one project config | Managing dynamic cloud machines |
-| Students or researchers sharing a few GPU boxes | See which GPUs are idle, busy by you, busy by others, or occupied by untracked local processes | Fair-share scheduling or quotas |
-| Daily experiment launches | Push the project, start a tmux run, assign a stable `RUN_ID`, and write a local run record | Replacing Slurm, Kubernetes, or Weights & Biases |
-| Checking recent work | Show the latest runs, tail logs, and rebuild the current view from live server facts | Long-term metrics storage |
-| Moving results home | Pull only allowed logs or outputs through editable allow-list rules | Unrestricted remote directory mirroring |
+| Scenario | What Remote_GO does |
+| --- | --- |
+| You edit code locally in an IDE and run it on one or more remote GPU servers | Run one local command to upload the project and start the code on a selected server/GPU |
+| Your experiments are spread across several remote servers | Show server and GPU status in one local view |
+| You often run multiple experiments for the same project | Show recent runs, their status, host, GPU, command, and log location |
+| You need to check a running or finished experiment | Tail the remote log from your local terminal |
+| You want selected logs or results back on your laptop | Pull only the configured logs or output files back into the local project |
 
 ## Requirements
 
@@ -36,36 +36,23 @@ Remote hosts:
 
 ## Install
 
-Clone the repository:
+Clone Remote_GO and install its local Python dependency:
 
 ```bash
-git clone https://github.com/<your-name>/Remote_GO.git
-cd Remote_GO
+git clone https://github.com/SY-Ma/Remote_GO.git
+python -m pip install -r Remote_GO/requirements.txt
 ```
 
-Install local Python dependencies:
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-Use either source mode:
-
-```bash
-./go init --project-root /path/to/your_project
-```
-
-or install the package in editable mode:
-
-```bash
-python -m pip install -e .
-remote-go init --project-root /path/to/your_project
-```
-
-After `init`, run commands from your own project with the generated wrapper:
+Initialize your own project from its project root:
 
 ```bash
 cd /path/to/your_project
+/path/to/Remote_GO/go init
+```
+
+After that, use the generated project-local command:
+
+```bash
 ./go status
 ```
 
@@ -111,15 +98,17 @@ hosts:
 sync:
   push_exclude_file: .remote_go/push.exclude
   pull_rules_file: .remote_go/pull.yaml
-  push_target: workspace
+  push_target: workspace  # go push uploads to remote.root/workspace/
 ```
 
 Fields you normally fill:
 
+- Local project root is detected automatically. It is the directory that contains `.remote_go/config.yaml`.
 - `remote.root`: absolute directory on each remote host.
 - `remote.env.name`: remote conda environment name, not your local environment.
 - `hosts[].name`: short name used by `./go --host`.
 - `hosts[].ssh`: SSH target accepted by your local `ssh` command.
+- `sync.push_target`: remote subfolder used by `./go push`. Keep `workspace` unless you want a different remote copy folder.
 - `.remote_go/push.exclude`: files skipped during upload.
 - `.remote_go/pull.yaml`: allowed remote folders and file patterns for download.
 
@@ -134,7 +123,7 @@ Fields you normally fill:
 | `./go log <run_id>` | Tail one remote run log |
 | `./go kill <run_id> --dry-run` | Preview stopping one of your own tracked runs |
 | `./go kill <run_id> --yes` | Stop one confirmed Remote_GO run |
-| `./go push [--host gpu1]` | Push project files to `remote.root/workspace/` |
+| `./go push [--host gpu1]` | Push project files to the configured remote workspace |
 | `./go pull --kind logs` | Pull allowed logs or outputs back locally |
 | `./go refresh --apply` | Rebuild the current run view from live server facts |
 

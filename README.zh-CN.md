@@ -8,13 +8,13 @@ Remote_GO 是一个项目本地化的 SSH/tmux 远程实验命令工具。它用
 
 ## 适用场景
 
-| 场景 | Remote_GO 能做什么 | 不覆盖什么 |
-| --- | --- | --- |
-| 一个本地代码项目，固定几台实验室服务器 | 把主机优先级、SSH 目标、远程根目录、conda 环境放在项目配置里 | 管理动态云机器 |
-| 学生或研究者共用少量 GPU 服务器 | 查看 GPU 是空闲、被自己占用、被别人占用，还是有未跟踪进程 | 公平调度、配额、排队 |
-| 日常启动实验 | 推送项目、在 tmux 中启动实验、分配稳定 `RUN_ID`、写入本地运行记录 | 替代 Slurm、Kubernetes 或 Weights & Biases |
-| 查看近期实验 | 显示最近 runs、查看日志尾部、用服务器实时事实重建当前视图 | 长期指标存储 |
-| 拉回结果 | 只按可编辑白名单拉回日志或输出 | 无限制镜像远程目录 |
+| 场景 | Remote_GO 能做什么 |
+| --- | --- |
+| 你在本地 IDE 修改代码，但需要在一台或多台远程 GPU 服务器上运行 | 用一条本地命令上传项目，并在指定服务器/GPU 上执行代码 |
+| 实验分布在多台远程服务器上 | 用本地指令集中查看服务器和 GPU 设备状态 |
+| 同一个项目经常同时跑多个实验 | 查看最近执行过的 run、当前状态、所在服务器、GPU、命令和日志位置 |
+| 需要检查正在运行或已经结束的实验 | 直接在本地终端查看远程日志 |
+| 想把日志或结果拉回本地 | 按配置规则只拉回需要的日志或输出文件 |
 
 ## 环境要求
 
@@ -36,36 +36,23 @@ Remote_GO 是一个项目本地化的 SSH/tmux 远程实验命令工具。它用
 
 ## 下载和安装
 
-克隆仓库：
+克隆 Remote_GO，并安装本地 Python 依赖：
 
 ```bash
-git clone https://github.com/<your-name>/Remote_GO.git
-cd Remote_GO
+git clone https://github.com/SY-Ma/Remote_GO.git
+python -m pip install -r Remote_GO/requirements.txt
 ```
 
-安装本地 Python 依赖：
-
-```bash
-python -m pip install -r requirements.txt
-```
-
-可以直接用源码模式初始化你的项目：
-
-```bash
-./go init --project-root /path/to/your_project
-```
-
-也可以用 editable 模式安装：
-
-```bash
-python -m pip install -e .
-remote-go init --project-root /path/to/your_project
-```
-
-执行 `init` 后，进入你自己的项目，用生成的 `go` 包装脚本执行命令：
+进入你自己的项目根目录并初始化：
 
 ```bash
 cd /path/to/your_project
+/path/to/Remote_GO/go init
+```
+
+之后在你的项目里使用生成的本地命令：
+
+```bash
 ./go status
 ```
 
@@ -111,15 +98,17 @@ hosts:
 sync:
   push_exclude_file: .remote_go/push.exclude
   pull_rules_file: .remote_go/pull.yaml
-  push_target: workspace
+  push_target: workspace  # go push 会上传到 remote.root/workspace/
 ```
 
 通常需要填写这些字段：
 
+- 本地项目根目录会自动识别，就是包含 `.remote_go/config.yaml` 的目录。
 - `remote.root`：每台远程服务器上的绝对路径。
 - `remote.env.name`：远程 conda 环境名，不是本地 Python 环境。
 - `hosts[].name`：`./go --host` 使用的短名称。
 - `hosts[].ssh`：本地 `ssh` 命令可直接识别的 SSH 目标。
+- `sync.push_target`：`./go push` 使用的远程子目录。一般保持 `workspace` 即可。
 - `.remote_go/push.exclude`：上传时跳过的文件。
 - `.remote_go/pull.yaml`：允许拉回的远程目录和文件模式。
 
@@ -134,7 +123,7 @@ sync:
 | `./go log <run_id>` | 查看某次远程实验的日志尾部 |
 | `./go kill <run_id> --dry-run` | 预览停止自己的某个 tracked run |
 | `./go kill <run_id> --yes` | 停止一个已确认的 Remote_GO run |
-| `./go push [--host gpu1]` | 推送项目文件到 `remote.root/workspace/` |
+| `./go push [--host gpu1]` | 推送项目文件到配置好的远程工作目录 |
 | `./go pull --kind logs` | 把允许的日志或输出拉回本地 |
 | `./go refresh --apply` | 根据服务器实时事实重建当前运行视图 |
 

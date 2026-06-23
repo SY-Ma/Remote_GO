@@ -146,6 +146,7 @@ def default_config_text(project_root: Path) -> str:
     project_id = sanitize_project_id(project_root.name)
     return f"""# Remote_GO project configuration.
 # Edit the fields marked "CHANGE ME" before launching real remote runs.
+# Local project root is detected automatically as the directory containing this .remote_go folder.
 
 project:
   # CHANGE ME only if you want a shorter stable id in run_id values.
@@ -196,7 +197,8 @@ sync:
   # Allow-list rules for pulling logs/results back from remote hosts.
   pull_rules_file: .remote_go/pull.yaml
 
-  # go push syncs to remote.root/<push_target>/ by default.
+  # go push syncs current local project files to remote.root/<push_target>/.
+  # Keep workspace unless you want a different remote-side copy folder.
   push_target: workspace
 """
 
