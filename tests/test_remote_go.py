@@ -93,6 +93,8 @@ class RemoteGoTests(unittest.TestCase):
         self.assertEqual(adapter.local_registry, (root / ".remote_go" / "state" / "registry.jsonl").resolve())
         self.assertIn(".git/", adapter.rsync_exclude_patterns)
         self.assertEqual({spec.name for spec in adapter.pull_specs}, {"logs", "outputs"})
+        outputs = next(spec for spec in adapter.pull_specs if spec.name == "outputs")
+        self.assertIn("*.ckpt", outputs.include_patterns)
 
     def test_hosts_order_is_preserved_as_priority(self) -> None:
         root = self.make_project()
@@ -224,7 +226,7 @@ class RemoteGoTests(unittest.TestCase):
 
         self.assertEqual([record["run_id"] for record in limited], [f"live-{index}" for index in range(6)])
 
-    def test_refresh_apply_writes_current_snapshot_without_rewriting_registry(self) -> None:
+    def test_refresh_default_writes_current_snapshot_without_rewriting_registry(self) -> None:
         root = self.make_project()
         adapter = self.load_adapter(root)
         console.append_registry(adapter.local_registry, {
@@ -264,7 +266,6 @@ class RemoteGoTests(unittest.TestCase):
         args = argparse.Namespace(
             hosts_config=root / ".remote_go" / "config.yaml",
             host=None,
-            apply=True,
             json=True,
             limit=12,
             verbose=False,
@@ -324,7 +325,7 @@ class RemoteGoTests(unittest.TestCase):
         self.assertEqual([candidate["pid"] for candidate in allowed], [11])
         self.assertEqual(blocked, [])
 
-    def test_kill_requires_yes_for_real_signal(self) -> None:
+    def test_kill_sends_signal_after_authorization_without_yes(self) -> None:
         root = self.make_project()
         adapter = self.load_adapter(root)
         args = argparse.Namespace(
@@ -362,9 +363,15 @@ class RemoteGoTests(unittest.TestCase):
             "command": ["python", "train.py"],
         })
 
-        with mock.patch.object(console, "query_all_status", return_value=status_payloads):
-            with self.assertRaisesRegex(ValueError, "without --yes"):
+        output = io.StringIO()
+        with mock.patch.object(console, "query_all_status", return_value=status_payloads), mock.patch.object(
+            console, "kill_remote_process", return_value={"ok": True, "dry_run": False, "pid": 11}
+        ) as kill_mock:
+            with redirect_stdout(output):
                 console.command_kill(args, adapter)
+        payload = json.loads(output.getvalue())
+        self.assertFalse(payload["dry_run"])
+        kill_mock.assert_called_once()
 
 
 if __name__ == "__main__":

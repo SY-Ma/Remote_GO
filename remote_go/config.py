@@ -59,7 +59,7 @@ DEFAULT_PULL_RULES = {
         "outputs": {
             "remote": "outputs/",
             "local": "outputs_server/{host}/",
-            "include": ["*/", "*.csv", "*.json", "*.png", "*.jpg", "*.jpeg", "*.txt"],
+            "include": ["*/", "*.csv", "*.json", "*.png", "*.jpg", "*.jpeg", "*.txt", "*.pt", "*.pth", "*.ckpt", "*.safetensors"],
         },
     }
 }
@@ -220,6 +220,7 @@ kinds:
       - "*.json"
 
   outputs:
+    # Edit remote/local if your project saves models somewhere else, such as checkpoints/.
     remote: outputs/
     local: outputs_server/{host}/
     include:
@@ -230,6 +231,10 @@ kinds:
       - "*.jpg"
       - "*.jpeg"
       - "*.txt"
+      - "*.pt"
+      - "*.pth"
+      - "*.ckpt"
+      - "*.safetensors"
 """
 
 

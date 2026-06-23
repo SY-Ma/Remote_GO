@@ -78,7 +78,7 @@ def build_parser() -> argparse.ArgumentParser:
     kill_parser.add_argument("--gpu", type=int, default=None)
     kill_parser.add_argument("--signal", default="TERM")
     kill_parser.add_argument("--dry-run", action="store_true")
-    kill_parser.add_argument("--yes", action="store_true", help="Required to send a real signal.")
+    kill_parser.add_argument("--yes", action="store_true", help=argparse.SUPPRESS)
     kill_parser.add_argument("--all", action="store_true", help="Signal all live candidates for the same run id.")
     kill_parser.set_defaults(func="kill")
 
@@ -89,7 +89,7 @@ def build_parser() -> argparse.ArgumentParser:
     push_parser.add_argument("--dry-run", action="store_true")
     push_parser.set_defaults(func="push")
 
-    pull_parser = subparsers.add_parser("pull", help="Pull allowed remote outputs back to the local project.")
+    pull_parser = subparsers.add_parser("pull", help="Pull configured remote files back to the local project.")
     add_project_config(pull_parser)
     pull_parser.add_argument("--host", type=str, default=None)
     pull_parser.add_argument("--kind", type=str, default="all")
@@ -99,7 +99,8 @@ def build_parser() -> argparse.ArgumentParser:
     refresh_parser = subparsers.add_parser("refresh", help="Rebuild the current run view from live server facts.")
     add_project_config(refresh_parser)
     refresh_parser.add_argument("--host", type=str, default=None)
-    refresh_parser.add_argument("--apply", action="store_true", help="Write .remote_go/state/current.json.")
+    refresh_parser.add_argument("--apply", action="store_true", help=argparse.SUPPRESS)
+    refresh_parser.add_argument("--preview", action="store_true", help="Show the rebuilt current view without writing current.json.")
     refresh_parser.add_argument("--json", action="store_true")
     refresh_parser.add_argument("--limit", type=int, default=12)
     refresh_parser.add_argument("--verbose", action="store_true")

@@ -2215,9 +2215,6 @@ def command_kill(args: argparse.Namespace, adapter: ProjectAdapter) -> int:
             f"Run {unique_run_ids[0]} has live process candidates in multiple locations ({locations}). "
             "Use --host/--gpu to narrow it, or --all to signal all matching current-user project processes."
         )
-    if not args.dry_run and not args.yes:
-        raise ValueError("Refusing to send a signal without --yes. Re-run with --dry-run first or add --yes.")
-
     hosts_by_name = {host.name: host for host in hosts}
     results = []
     for candidate in candidates:
@@ -2297,7 +2294,10 @@ def command_refresh(args: argparse.Namespace, adapters: Sequence[ProjectAdapter]
             "History registry is not deleted or rewritten."
         ),
     }
-    if args.apply:
+    apply_refresh = not bool(getattr(args, "preview", False))
+    if getattr(args, "apply", False):
+        apply_refresh = True
+    if apply_refresh:
         for adapter in adapters:
             current_path = adapter.local_root / ".remote_go" / "state" / "current.json"
             current_path.parent.mkdir(parents=True, exist_ok=True)
@@ -2308,8 +2308,8 @@ def command_refresh(args: argparse.Namespace, adapters: Sequence[ProjectAdapter]
     if args.json:
         print(json.dumps(payload, indent=2, ensure_ascii=False))
         return 0
-    print(f"Refresh {'applied' if args.apply else 'preview'}: {len(current_records)} current row(s), {len(anomalies)} issue(s).")
-    if args.apply:
+    print(f"Refresh {'applied' if apply_refresh else 'preview'}: {len(current_records)} current row(s), {len(anomalies)} issue(s).")
+    if apply_refresh:
         print("Wrote .remote_go/state/current.json")
     if current_records:
         print_registry(limit_current_records(current_records, args.limit), verbose=args.verbose)
@@ -2458,7 +2458,7 @@ def command_run(args: argparse.Namespace, adapter: ProjectAdapter) -> int:
     hosts = load_hosts(args.hosts_config)
     command_tokens = adapter.build_command(task_name, args.framework_args)
     if not command_tokens:
-        raise ValueError("go run requires a command after --, for example: ./go run -- python train.py")
+        raise ValueError("go run requires a command after --, for example: ./go run -- python entrypoint.py")
 
     if args.dry_run:
         host = find_host(hosts, args.host) if args.host else hosts[0]

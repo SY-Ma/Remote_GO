@@ -118,21 +118,22 @@ Fields you normally fill:
 | --- | --- |
 | `./go init` | Create Remote_GO files in a project |
 | `./go status [--host gpu1]` | Show configured remote GPU status |
-| `./go run -- python train.py` | Push code and launch a remote tmux run |
+| `./go run -- python entrypoint.py` | Push code and launch a remote tmux run |
 | `./go runs [--limit 30]` | Show recent run records. Default limit is 12 |
 | `./go log <run_id>` | Tail one remote run log |
-| `./go kill <run_id> --dry-run` | Preview stopping one of your own tracked runs |
-| `./go kill <run_id> --yes` | Stop one confirmed Remote_GO run |
+| `./go kill <run_id>` | Stop one of your own runs |
 | `./go push [--host gpu1]` | Push project files to the configured remote workspace |
-| `./go pull --kind logs` | Pull allowed logs or outputs back locally |
-| `./go refresh --apply` | Rebuild the current run view from live server facts |
+| `./go pull` | Pull configured logs, outputs, and model files back locally |
+| `./go refresh` | Rebuild the current run view from live server facts |
 
 Launch examples:
 
 ```bash
-./go run --dry-run -- python train.py --config configs/train.yaml
-./go run --host gpu1 --gpu 0 --name baseline -- python train.py --epochs 100
+./go run --dry-run -- python entrypoint.py --config configs/train.yaml
+./go run --host gpu1 --gpu 0 --name baseline -- python entrypoint.py --epochs 100
 ```
+
+Use `./go kill <run_id> --dry-run` if you want to preview which remote process would be stopped.
 
 Run list examples:
 
@@ -145,9 +146,11 @@ Run list examples:
 Pull examples:
 
 ```bash
-./go pull --kind logs
-./go pull --kind outputs --host gpu1
+./go pull
+./go pull --host gpu1
 ```
+
+Edit `.remote_go/pull.yaml` to choose which logs, outputs, or model files are copied.
 
 ## Build And Validate
 
@@ -171,7 +174,7 @@ python -m build
 - `go pull` uses allow-list rules from `.remote_go/pull.yaml`.
 - Remote paths are rejected if they escape `remote.root`.
 - History is append-only in `.remote_go/state/registry.jsonl`.
-- `go refresh --apply` writes `.remote_go/state/current.json` without rewriting history.
+- `go refresh` writes `.remote_go/state/current.json` without rewriting history. Use `--preview` to avoid writing.
 - `go kill` only signals current-user processes that Remote_GO can prove belong to the current project.
 
 ## License

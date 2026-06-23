@@ -118,21 +118,22 @@ sync:
 | --- | --- |
 | `./go init` | 在项目中创建 Remote_GO 文件 |
 | `./go status [--host gpu1]` | 查看配置的远程 GPU 状态 |
-| `./go run -- python train.py` | 推送代码并启动远程 tmux 实验 |
+| `./go run -- python 程序入口.py` | 推送代码并启动远程 tmux 实验 |
 | `./go runs [--limit 30]` | 查看最近运行记录，默认显示 12 条 |
 | `./go log <run_id>` | 查看某次远程实验的日志尾部 |
-| `./go kill <run_id> --dry-run` | 预览停止自己的某个 tracked run |
-| `./go kill <run_id> --yes` | 停止一个已确认的 Remote_GO run |
+| `./go kill <run_id>` | 停止自己的某个 run |
 | `./go push [--host gpu1]` | 推送项目文件到配置好的远程工作目录 |
-| `./go pull --kind logs` | 把允许的日志或输出拉回本地 |
-| `./go refresh --apply` | 根据服务器实时事实重建当前运行视图 |
+| `./go pull` | 把配置好的日志、输出和模型文件拉回本地 |
+| `./go refresh` | 根据服务器实时事实重建当前运行视图 |
 
 启动实验示例：
 
 ```bash
-./go run --dry-run -- python train.py --config configs/train.yaml
-./go run --host gpu1 --gpu 0 --name baseline -- python train.py --epochs 100
+./go run --dry-run -- python 程序入口.py --config configs/train.yaml
+./go run --host gpu1 --gpu 0 --name baseline -- python 程序入口.py --epochs 100
 ```
+
+如果想先确认会停止哪个远程进程，可以使用 `./go kill <run_id> --dry-run`。
 
 查看 run 示例：
 
@@ -145,9 +146,11 @@ sync:
 拉取结果示例：
 
 ```bash
-./go pull --kind logs
-./go pull --kind outputs --host gpu1
+./go pull
+./go pull --host gpu1
 ```
+
+需要拉回哪些日志、输出或模型文件，建议在 `.remote_go/pull.yaml` 中配置。
 
 ## 构建和验证
 
@@ -171,7 +174,7 @@ python -m build
 - `go pull` 只使用 `.remote_go/pull.yaml` 中的白名单规则。
 - 远程路径如果逃逸出 `remote.root` 会被拒绝。
 - 运行历史追加写入 `.remote_go/state/registry.jsonl`。
-- `go refresh --apply` 写入 `.remote_go/state/current.json`，不会改写历史。
+- `go refresh` 写入 `.remote_go/state/current.json`，不会改写历史。使用 `--preview` 可以只预览不写入。
 - `go kill` 只会向 Remote_GO 能证明属于当前项目、且属于当前 SSH 用户的进程发送信号。
 
 ## License
