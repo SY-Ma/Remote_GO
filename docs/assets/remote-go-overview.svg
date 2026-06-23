@@ -36,7 +36,7 @@
   <rect x="65" y="240" width="195" height="42" rx="21" class="chip"/>
   <text x="162.5" y="266" text-anchor="middle" class="text">Run local commands</text>
   <rect x="73" y="295" width="179" height="42" rx="21" class="chip"/>
-  <text x="162.5" y="321" text-anchor="middle" class="text">AI can call ./go</text>
+  <text x="162.5" y="321" text-anchor="middle" class="text">AI calls ./go</text>
 
   <text x="317" y="256" text-anchor="middle" class="label">Commands</text>
   <text x="317" y="274" text-anchor="middle" class="label">or AI calls</text>
@@ -71,7 +71,7 @@
 
   <path d="M850 460 H150" class="flow-arrow"/>
   <rect x="340" y="438" width="320" height="44" rx="22" fill="#ffffff" stroke="#d7e1ed" stroke-width="1.2"/>
-  <text x="500" y="466" text-anchor="middle" class="label">Output back: logs, outputs, models</text>
+  <text x="500" y="466" text-anchor="middle" class="label">Feedback</text>
 
   <rect x="80" y="510" width="840" height="135" rx="20" fill="#fff7ed" class="card"/>
   <text x="500" y="542" text-anchor="middle" class="card-title">Main Effect</text>
