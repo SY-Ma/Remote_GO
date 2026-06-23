@@ -8,6 +8,8 @@ It can also act as a stable helper layer for upper-layer AI assistants, so they 
 
 Remote_GO focuses on the common local-to-remote experiment workflow.
 
+![Remote_GO overview](docs/assets/remote-go-overview.svg)
+
 ## When To Use It
 
 | Scenario | What Remote_GO does |

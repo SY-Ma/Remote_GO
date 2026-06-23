@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">Remote_GO overview</title>
+  <desc id="desc">Diagram showing Remote_GO as a local command layer between users or AI assistants and remote GPU servers.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7fafc"/>
+      <stop offset="1" stop-color="#edf4ff"/>
+    </linearGradient>
+    <linearGradient id="local" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ecfeff"/>
+      <stop offset="1" stop-color="#dbeafe"/>
+    </linearGradient>
+    <linearGradient id="remote" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f0fdf4"/>
+      <stop offset="1" stop-color="#dcfce7"/>
+    </linearGradient>
+    <linearGradient id="state" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fff7ed"/>
+      <stop offset="1" stop-color="#ffedd5"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#1f2937" flood-opacity="0.12"/>
+    </filter>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto" markerUnits="strokeWidth">
+      <path d="M2,2 L10,6 L2,10 Z" fill="#475569"/>
+    </marker>
+    <style>
+      .title { font: 700 34px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 17px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #475569; }
+      .label { font: 700 20px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #0f172a; }
+      .small { font: 500 15px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #334155; }
+      .tiny { font: 600 13px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; fill: #475569; }
+      .code { font: 700 14px ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; fill: #0f172a; }
+      .panel { stroke: #dbe4f0; stroke-width: 1.5; filter: url(#shadow); }
+      .pill { fill: #ffffff; stroke: #dbe4f0; stroke-width: 1.2; }
+      .line { stroke: #475569; stroke-width: 2.4; fill: none; marker-end: url(#arrow); }
+      .softline { stroke: #94a3b8; stroke-width: 1.8; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+
+  <rect width="1200" height="680" fill="url(#bg)"/>
+
+  <text x="70" y="72" class="title">Remote_GO: local commands for remote GPU experiments</text>
+  <text x="70" y="104" class="subtitle">Human-friendly workflow with stable state for scripts and upper-layer AI assistants.</text>
+
+  <rect x="70" y="145" width="230" height="250" rx="18" fill="#ffffff" class="panel"/>
+  <text x="100" y="190" class="label">User / AI layer</text>
+  <rect x="100" y="220" width="170" height="42" rx="21" class="pill"/>
+  <text x="125" y="247" class="small">Local IDE edits</text>
+  <rect x="100" y="278" width="170" height="42" rx="21" class="pill"/>
+  <text x="118" y="305" class="small">AI reads JSON</text>
+  <rect x="100" y="336" width="170" height="42" rx="21" class="pill"/>
+  <text x="116" y="363" class="small">One-line actions</text>
+
+  <rect x="380" y="132" width="440" height="290" rx="20" fill="url(#local)" class="panel"/>
+  <text x="420" y="178" class="label">Local project + Remote_GO</text>
+  <text x="420" y="206" class="small">Project config, host list, sync rules, run registry</text>
+
+  <rect x="420" y="236" width="160" height="44" rx="12" class="pill"/>
+  <text x="445" y="264" class="code">./go status</text>
+  <rect x="620" y="236" width="160" height="44" rx="12" class="pill"/>
+  <text x="650" y="264" class="code">./go run</text>
+  <rect x="420" y="300" width="160" height="44" rx="12" class="pill"/>
+  <text x="452" y="328" class="code">./go runs</text>
+  <rect x="620" y="300" width="160" height="44" rx="12" class="pill"/>
+  <text x="657" y="328" class="code">./go log</text>
+  <rect x="420" y="364" width="160" height="44" rx="12" class="pill"/>
+  <text x="454" y="392" class="code">./go pull</text>
+  <rect x="620" y="364" width="160" height="44" rx="12" class="pill"/>
+  <text x="645" y="392" class="code">./go refresh</text>
+
+  <rect x="900" y="145" width="230" height="250" rx="18" fill="url(#remote)" class="panel"/>
+  <text x="940" y="190" class="label">GPU servers</text>
+  <rect x="930" y="220" width="170" height="46" rx="12" class="pill"/>
+  <text x="956" y="248" class="small">host: gpu1</text>
+  <rect x="930" y="284" width="170" height="46" rx="12" class="pill"/>
+  <text x="956" y="312" class="small">host: gpu2</text>
+  <rect x="930" y="348" width="170" height="46" rx="12" class="pill"/>
+  <text x="946" y="376" class="small">tmux + conda</text>
+
+  <path d="M300 270 C330 270 345 270 380 270" class="line"/>
+  <text x="318" y="252" class="tiny">commands</text>
+  <path d="M820 270 C850 270 870 270 900 270" class="line"/>
+  <text x="830" y="252" class="tiny">SSH / rsync / tmux</text>
+  <path d="M900 330 C865 430 805 470 745 496" class="softline"/>
+  <text x="794" y="438" class="tiny">logs, outputs, models</text>
+  <path d="M455 496 C390 465 340 430 300 365" class="softline"/>
+  <text x="330" y="458" class="tiny">tables + JSON</text>
+
+  <rect x="130" y="468" width="940" height="130" rx="18" fill="url(#state)" class="panel"/>
+  <text x="170" y="512" class="label">What Remote_GO makes explicit</text>
+  <rect x="170" y="536" width="150" height="38" rx="19" class="pill"/>
+  <text x="198" y="561" class="small">run_id</text>
+  <rect x="350" y="536" width="150" height="38" rx="19" class="pill"/>
+  <text x="386" y="561" class="small">host / GPU</text>
+  <rect x="530" y="536" width="150" height="38" rx="19" class="pill"/>
+  <text x="566" y="561" class="small">status</text>
+  <rect x="710" y="536" width="150" height="38" rx="19" class="pill"/>
+  <text x="746" y="561" class="small">log path</text>
+  <rect x="890" y="536" width="140" height="38" rx="19" class="pill"/>
+  <text x="914" y="561" class="small">results</text>
+
+  <text x="150" y="638" class="subtitle">Effect: local editing stays simple, remote execution becomes visible, repeatable, and easier for humans or AI to manage.</text>
+</svg>
