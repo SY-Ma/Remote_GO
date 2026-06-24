@@ -36,7 +36,7 @@
   <rect x="65" y="240" width="195" height="42" rx="21" class="chip"/>
   <text x="162.5" y="266" text-anchor="middle" class="text">Run local commands</text>
   <rect x="73" y="295" width="179" height="42" rx="21" class="chip"/>
-  <text x="162.5" y="321" text-anchor="middle" class="text">AI calls ./go</text>
+  <text x="162.5" y="321" text-anchor="middle" class="text">AI reads and calls</text>
 
   <text x="317" y="256" text-anchor="middle" class="label">Commands</text>
   <text x="317" y="274" text-anchor="middle" class="label">or AI calls</text>
