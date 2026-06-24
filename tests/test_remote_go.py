@@ -157,6 +157,69 @@ class RemoteGoTests(unittest.TestCase):
         proc = self.run_go(root, ["run", "--dry-run"], expect_success=False)
         self.assertIn("requires a command", proc.stderr)
 
+    def test_launch_tmux_pane_uses_stable_window_id(self) -> None:
+        adapter = self.load_adapter(self.make_project())
+        host = console.HostConfig(name="gpu1", ssh="user@gpu1")
+        captured = {}
+
+        def fake_run_ssh(host_arg, remote_command, capture=True, check=False):
+            captured["host"] = host_arg
+            captured["remote_command"] = remote_command
+            return subprocess.CompletedProcess(["ssh"], 0, "", "")
+
+        with mock.patch.object(console, "run_ssh", fake_run_ssh):
+            console.launch_tmux_pane(adapter, host, "/remote/demo/runs/run1/pane.sh", 0, "run1")
+
+        remote_command = captured["remote_command"]
+        self.assertIn("window_id=", remote_command)
+        self.assertIn("automatic-rename off", remote_command)
+        self.assertIn('target="$window_id"', remote_command)
+        self.assertIn('tmux list-panes -t "$target"', remote_command)
+        self.assertIn('tmux split-window -t "$target"', remote_command)
+        self.assertNotIn("tmux list-panes -t M:M", remote_command)
+        self.assertNotIn("grep -Fxq", remote_command)
+
+    def test_go_run_clears_reservation_and_skips_registry_when_initial_status_missing(self) -> None:
+        root = self.make_project()
+        adapter = self.load_adapter(root)
+        args = argparse.Namespace(
+            task="command",
+            hosts_config=root / ".remote_go" / "config.yaml",
+            host="gpu1",
+            gpu=0,
+            mode=None,
+            dry_run=False,
+            name=None,
+            comment=None,
+            change_note=None,
+            framework_args=["--", "python", "train.py"],
+        )
+
+        with mock.patch.object(console, "query_all_status", return_value=[]), mock.patch.object(
+            console, "choose_idle_gpu", return_value={"host": "gpu1", "gpu": 0}
+        ), mock.patch.object(console, "ensure_remote_dirs"), mock.patch.object(
+            console, "sync_project", return_value={}
+        ), mock.patch.object(
+            console, "sync_required_artifacts", return_value=[]
+        ), mock.patch.object(
+            console, "upload_file"
+        ), mock.patch.object(
+            console, "run_ssh", return_value=subprocess.CompletedProcess(["ssh"], 0, "", "")
+        ), mock.patch.object(
+            console, "launch_tmux_pane"
+        ), mock.patch.object(
+            console, "wait_for_remote_run_status", return_value=None
+        ), mock.patch.object(
+            console, "clear_launch_reservation", return_value=True
+        ) as clear_reservation:
+            with self.assertRaisesRegex(RuntimeError, "did not create status.json"):
+                console.command_run(args, adapter)
+
+        clear_reservation.assert_called_once()
+        self.assertEqual(clear_reservation.call_args.args[1].name, "gpu1")
+        self.assertEqual(clear_reservation.call_args.args[2], 0)
+        self.assertEqual(adapter.local_registry.read_text(), "")
+
     def test_push_dry_run_defaults_to_workspace_target(self) -> None:
         root = self.make_project()
         proc = self.run_go(root, ["push", "--dry-run"])

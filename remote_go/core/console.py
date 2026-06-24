@@ -1513,7 +1513,6 @@ exec "${{SHELL:-/bin/bash}}" -l
 
 
 def launch_tmux_pane(adapter: ProjectAdapter, host: HostConfig, run_script_path: str, gpu_id: int, run_id: str) -> None:
-    target = f"{adapter.tmux_session}:{adapter.tmux_window}"
     pane_title = f"{adapter.display_name}_GPU_{gpu_id}"
     busy_pane_title = f"{pane_title}_BUSY"
     pane_command = f"bash {shlex.quote(run_script_path)}"
@@ -1563,13 +1562,29 @@ def launch_tmux_pane(adapter: ProjectAdapter, host: HostConfig, run_script_path:
         f"payload = {{'run_id': {run_id!r}, 'project': {adapter.project_id!r}, 'host': {host.name!r}, 'gpu': {gpu_id}, 'created_at_epoch': int(time.time())}}",
         "Path(sys.argv[1]).write_text(json.dumps(payload, indent=2))",
         "PY",
-        f"tmux has-session -t {shlex.quote(adapter.tmux_session)} 2>/dev/null || tmux new-session -d -s {shlex.quote(adapter.tmux_session)} -n {shlex.quote(adapter.tmux_window)}",
-        f"tmux list-windows -t {shlex.quote(adapter.tmux_session)} -F '#W' | grep -Fxq {shlex.quote(adapter.tmux_window)} || tmux new-window -t {shlex.quote(adapter.tmux_session + ':')} -n {shlex.quote(adapter.tmux_window)}",
+        f"tmux_session={shlex.quote(adapter.tmux_session)}",
+        f"tmux_window={shlex.quote(adapter.tmux_window)}",
+        "if ! tmux has-session -t \"$tmux_session\" 2>/dev/null; then",
+        "  tmux new-session -d -s \"$tmux_session\" -n \"$tmux_window\"",
+        "  window_id=$(tmux list-windows -t \"$tmux_session\" -F '#{window_id}' | awk 'NR == 1 {print; exit}')",
+        "else",
+        "  window_id=$(tmux list-windows -t \"$tmux_session\" -F '#{window_name}\t#{window_id}' | awk -F '\\t' -v name=\"$tmux_window\" '$1 == name {print $2; exit}')",
+        "  if [ -z \"$window_id\" ]; then",
+        "    window_id=$(tmux new-window -t \"${tmux_session}:\" -n \"$tmux_window\" -P -F '#{window_id}')",
+        "  fi",
+        "fi",
+        "if [ -z \"$window_id\" ]; then",
+        "  echo \"tmux window id could not be resolved for $tmux_session:$tmux_window\" >&2",
+        "  exit 77",
+        "fi",
+        "tmux set-option -w -t \"$window_id\" automatic-rename off >/dev/null 2>&1 || true",
+        "tmux rename-window -t \"$window_id\" \"$tmux_window\" >/dev/null 2>&1 || true",
+        "target=\"$window_id\"",
         f"pane_title={shlex.quote(pane_title)}",
         f"busy_pane_title={shlex.quote(busy_pane_title)}",
         f"pane_command={shlex.quote(pane_command)}",
         (
-            f"pane_info=$(tmux list-panes -t {shlex.quote(target)} "
+            "pane_info=$(tmux list-panes -t \"$target\" "
             "-F '#{pane_id}\t#{pane_title}\t#{pane_current_command}\t#{pane_dead}' "
             "| awk -F '\\t' -v title=\"$pane_title\" '$2 == title {print; exit}')"
         ),
@@ -1586,7 +1601,7 @@ def launch_tmux_pane(adapter: ProjectAdapter, host: HostConfig, run_script_path:
         "fi",
         "if [ -z \"$pane_info\" ]; then",
         (
-            f"  pane_info=$(tmux list-panes -t {shlex.quote(target)} "
+            "  pane_info=$(tmux list-panes -t \"$target\" "
             "-F '#{pane_id}\t#{pane_title}\t#{pane_current_command}\t#{pane_dead}' "
             f"| awk -F '\\t' '$2 !~ /^{re.escape(adapter.display_name)}_GPU_/ && $3 ~ /^(bash|zsh|sh|fish|tcsh|csh)$/ && $4 == \"0\" {{print; exit}}')"
         ),
@@ -1595,16 +1610,23 @@ def launch_tmux_pane(adapter: ProjectAdapter, host: HostConfig, run_script_path:
         "$pane_info",
         "EOF",
         "  else",
-        f"    pane_id=$(tmux split-window -t {shlex.quote(target)} -v -P -F '#{{pane_id}}')",
+        "    pane_id=$(tmux split-window -t \"$target\" -v -P -F '#{pane_id}')",
         "  fi",
         "fi",
         "tmux select-pane -t \"$pane_id\" -T \"$busy_pane_title\"",
         "tmux send-keys -t \"$pane_id\" \"$pane_command\" C-m",
-        f"tmux select-layout -t {shlex.quote(target)} tiled >/dev/null 2>&1 || true",
+        "tmux select-layout -t \"$target\" tiled >/dev/null 2>&1 || true",
     ])
     proc = run_ssh(host, remote_command, capture=True, check=False)
     if proc.returncode != 0:
         raise RuntimeError((proc.stderr or proc.stdout or "tmux launch failed").strip())
+
+
+def clear_launch_reservation(adapter: ProjectAdapter, host: HostConfig, gpu_id: int) -> bool:
+    lock_dir = remote_join(adapter.remote_project_root, "runs", "gpu_locks")
+    reservation_file = remote_join(lock_dir, f"gpu_{gpu_id}.reservation.json")
+    proc = run_ssh(host, f"rm -f {shlex.quote(reservation_file)}", capture=True, check=False)
+    return proc.returncode == 0
 
 
 def wait_for_remote_run_status(adapter: ProjectAdapter, host: HostConfig, run_id: str, timeout_seconds: int = 10) -> Optional[Dict[str, Any]]:
@@ -2580,13 +2602,14 @@ def command_run(args: argparse.Namespace, adapter: ProjectAdapter) -> int:
         raise RuntimeError((chmod_proc.stderr or chmod_proc.stdout or "chmod failed").strip())
     launch_tmux_pane(adapter, host, remote_pane_script_path, int(selected_gpu["gpu"]), run_id)
     initial_status = wait_for_remote_run_status(adapter, host, run_id)
-    metadata["initial_remote_status"] = initial_status
-    append_registry(adapter.local_registry, metadata)
     if initial_status is None:
+        clear_launch_reservation(adapter, host, int(selected_gpu["gpu"]))
         raise RuntimeError(
             f"tmux command was sent, but run {run_id} did not create status.json within 10 seconds. "
             f"Inspect tmux session {adapter.tmux_session} on {host.name}."
         )
+    metadata["initial_remote_status"] = initial_status
+    append_registry(adapter.local_registry, metadata)
     print(f"Submitted {run_id}")
     print(f"Host/GPU: {host.name} / {selected_gpu['gpu']}")
     print(f"tmux: ssh {host.ssh} then tmux attach -t {adapter.tmux_session}")
